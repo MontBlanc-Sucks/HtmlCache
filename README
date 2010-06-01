@@ -47,3 +47,24 @@ multiple aggregators. This really adds up to a ton of requests.
   find /full/path/to/app/webroot/cache -mmin +360 | xargs rm -f
   * A sample htaccess file, cache.htaccess is included that will additionally gzip the cached files
   for even better performance.
+
+/* Staitc Cache */
+  Aims of this exp branch that will cache file types by extension defaulting to html
+  maybe provide a admin cache hitlist - click to kill
+  kill auto when saved not the entire thing so just the
+  slug/index.html
+
+  moving to
+  html/slug/index.html rss/articles/index.rss 
+  html/articles/my-content-title/index.html 
+  txt/ticker/index.txt txt/ticker/alt/index.txt
+
+  for now in edit once if save 
+	App::import('Component', 'HtmlCache.Buster');
+	$this->Buster = new BusterComponent();
+	$this->Buster->kill($this->data['slug']);
+
+  will have to look at croogo hooks though :)
+ 
+
+
