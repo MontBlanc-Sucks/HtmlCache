@@ -1,15 +1,8 @@
-/*
- * HtmlCache Plugin
- * Copyright (c) 2009 Matt Curry
- * http://pseudocoder.com
- * http://github.com/mcurry/html_cache
- *
- * @author      mattc <matt@pseudocoder.com>
- * @license     MIT
- *
- */
+# StaticCache
+Caches static files output by cake; grouping them by format
+A componant kills cached files; new ones are remade when routed to.
  
-/* About */
+## About
 Cake's core cache helper is great, but the files it outputs are PHP files, so it will never be as fast as
 straight HTML files. This HTML Cache Helper writes out pure HTML, meaning the web server doesn't have to
 touch PHP when a request is made.  Included is also a Croogo CMS (http://croogo.org) using the hooks system.
@@ -19,22 +12,22 @@ use this helper on http://www.rsstalker.com. It handles the custom RSS feeds (cu
 is perfect since there is nothing user specific in the XML. Each feed gets hit multiple times a day, by
 multiple aggregators. This really adds up to a ton of requests.
  
-/* Notes */
+## Notes
   * Nothing specific to a user on the page. No "Welcome, Matt" or shopping carts.
   * Cache will never expire (for non-Croogo version). See below for workaround.
 
-/* Instructions */
+## Instructions
   * Include the helper in your controller:
     var $helpers = array('HtmlCache.HtmlCache');
   * Or in a single action
-    $this->helpers[] = 'HtmlCache.HtmlCache';
+    $this->helpers[] = 'StaticCache.StaticCache';
   * Update your webroot .htaccess file to include the following lines before CakePHP's Rewrite Cond
     (see extras/webroot.htaccess for an example):
     RewriteCond %{REQUEST_METHOD} ^GET$
-    RewriteCond %{DOCUMENT_ROOT}/cache/$1/index.html -f
+    RewriteCond %{DOCUMENT_ROOT}/cache/{locale}/{format}/$1/index.html -f
     RewriteRule ^(.*)$ /cache/$1/index.html [L]
 
-/* Croogo Instructions */
+## Croogo Instructions (broken most likely)
   * Update your webroot .htaccess file to include the following lines before CakePHP's Rewrite Cond
     (see extras/webroot.htaccess for an example):
     RewriteCond %{DOCUMENT_ROOT}/cache/$1/index.html -f
@@ -42,8 +35,19 @@ multiple aggregators. This really adds up to a ton of requests.
   * In the Croogo admin go to Extensions -> Hooks and active both the component and helper.
   * The Croogo version will automatically delete the cached file if there is a change to the content or a comment is added.
     
-/* Tips */
+## Tips
   * To expire the cache I use a cron job which deletes old files from the directory.
   find /full/path/to/app/webroot/cache -mmin +360 | xargs rm -f
   * A sample htaccess file, cache.htaccess is included that will additionally gzip the cached files
   for even better performance.
+  
+  
+### Acknowledgements
+
+This plugin is based upon HtmlCache Plugin
+ * Copyright (c) 2009 Matt Curry
+ * http://pseudocoder.com
+ * http://github.com/mcurry/html_cache
+ *
+ * @author      mattc <matt@pseudocoder.com>
+ * @license     MIT
