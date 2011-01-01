@@ -9,7 +9,7 @@
  * @license       MIT
  *
  */
-App::import('Helper', 'HtmlCache.HtmlCacheBase');
+App::import('Helper', 'StaticCache.StaticCacheBase');
 
 /**
  * HtmlCacheHelper class
@@ -18,7 +18,7 @@ App::import('Helper', 'HtmlCache.HtmlCacheBase');
  * @package       html_cache
  * @subpackage    html_cache.views.helpers
  */
-class HtmlCacheHelper extends HtmlCacheBaseHelper {
+class StaticCacheHelper extends StaticCacheBaseHelper {
 /**
  * construct method
  *
@@ -26,7 +26,7 @@ class HtmlCacheHelper extends HtmlCacheBaseHelper {
  * @return void
  * @access private
  */
-  function __construct($options) {
-    $this->options = array_merge($this->options, $options);
+  function __construct() {
+    parent::__construct();
   }
 }

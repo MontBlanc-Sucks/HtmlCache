@@ -9,7 +9,7 @@
  * @license       MIT
  *
  */
-App::import('Helper', 'HtmlCache.HtmlCacheBase');
+App::import('Helper', 'StaticCache.StaticCacheBase');
 
 /**
  * HtmlCacheHookHelper class
@@ -18,7 +18,7 @@ App::import('Helper', 'HtmlCache.HtmlCacheBase');
  * @package       html_cache
  * @subpackage    html_cache.views.helpers
  */
-class HtmlCacheHookHelper extends HtmlCacheBaseHelper {
+class StaticCacheHookHelper extends StaticCacheBaseHelper {
 
 /**
  * isCachable method
