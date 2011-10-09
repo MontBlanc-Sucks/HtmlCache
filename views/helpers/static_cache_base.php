@@ -77,7 +77,7 @@ class StaticCacheBaseHelper extends Helper {
 			$iniFile = App::pluginPath('StaticCache') . 'config' . DS . 'config.ini';
 		}
 		$this->_iniFile = parse_ini_file($iniFile, true);
-		//die(debug($this->_iniFile));
+		//debug($this->_iniFile);
 	}
 
 /**
@@ -144,17 +144,27 @@ class StaticCacheBaseHelper extends Helper {
 		if($path !== '') {
 			$path = DS . ltrim($path, DS);
 		}
-    
-    $host = '';
-    if($this->options['domain']) {
-      if (!empty($_SERVER['HTTP_HOST'])) {
-        $host = DS . $_SERVER['HTTP_HOST'];
-      } elseif ($this->options['host']) {
-        $host = DS . $this->options['host'];
-      }
-    }
-    
-    //die(debug($this->options));
+		
+		$host = false;
+		$default = $this->config('StaticCache.domain');
+		$hostKeys = $this->config('StaticCache.keys');
+		//debug($this->options['domain']);
+		if(is_array($hostKeys)) {
+		  if ($_SERVER['HTTP_HOST'] !== $default) {
+		  $hostFlipKeys = array_flip($hostKeys);
+		    $host = $hostKeys[$hostFlipKeys[substr($_SERVER['HTTP_HOST'], 0, strpos($_SERVER['HTTP_HOST'], '.'))]];
+		  //debug($hostFlipKeys);
+		    //print "option 1";
+		  } else {
+		    //print "option defaault";
+		    $host = $hostKeys[0];
+		  }
+		
+		
+		  $host = DS . $host;
+		  //debug($hostKeys);
+		  //debug($host);
+		}
     
 		$path = APP . 'webroot' . DS . 'cache' . $host . DS . $this->params['url']['ext'] .  $path . DS . 'index.' . $this->params['url']['ext'];
 		
@@ -171,8 +181,11 @@ class StaticCacheBaseHelper extends Helper {
  * @access protected
  */
 	protected function _isCachable() {
-		return true;
-		if (!$this->options['test_mode'] && Configure::read('debug') > 0) {
+		if (!$this->config('StaticCache.testMode') || Configure::read('debug') > 0) {
+			return false;
+		}
+
+		if(strpos($this->here, '/users') !== false || strpos($this->here, '/login') !== false || strpos($this->here, '/admin') !== false) {
 			return false;
 		}
 
