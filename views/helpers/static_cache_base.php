@@ -20,7 +20,7 @@ class StaticCacheBaseHelper extends Helper {
  */
 	public $options = array(
 		'test_mode' => false,
-    'host' => null,
+		'host' => null,
 		'domain' => false
 	);
 
@@ -47,6 +47,14 @@ class StaticCacheBaseHelper extends Helper {
  * @access public
  */
 	public $isFlash = false;
+
+/**
+ * isFlash property
+ *
+ * @var bool false
+ * @access public
+ */
+	public $forceDisable = false;
 
 /**
  * parsed ini file values.
@@ -182,6 +190,10 @@ class StaticCacheBaseHelper extends Helper {
  */
 	protected function _isCachable() {
 		if (!$this->config('StaticCache.testMode') || Configure::read('debug') > 0) {
+			return false;
+		}
+		
+		if ($this->forceDisable) {
 			return false;
 		}
 
