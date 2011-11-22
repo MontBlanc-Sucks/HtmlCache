@@ -2,7 +2,7 @@
 App::import('Helper', array('HtmlCache.HtmlCache'));
 App::import('Core', array('View'));
 
-class HtmlCacheTestCase extends CakeTestCase {
+class HtmlCacheTest extends CakeTestCase {
   public $View = null;
   public $www_root = null;
 
