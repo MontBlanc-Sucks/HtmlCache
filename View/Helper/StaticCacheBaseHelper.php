@@ -11,6 +11,7 @@
  */
 App::uses('SessionHelper', 'View/Helper');
 App::uses('AppHelper', 'View/Helper');
+App::uses('File', 'Utility');
 class StaticCacheBaseHelper extends AppHelper {
 
 /**
@@ -148,9 +149,9 @@ class StaticCacheBaseHelper extends AppHelper {
 			return;
 		}
 
-		//handle 404s
+		//handle error pages not just 404
 		if ($this->View->name == 'CakeError') {
-			$path = $this->params['url']['url'];
+			$path = $this->request->params['url'];
 		} else {
 			$path = $this->here;
 		}
@@ -160,10 +161,13 @@ class StaticCacheBaseHelper extends AppHelper {
 			$path = DS . ltrim($path, DS);
 		}
 		
+		Configure::write('debug', 2);
+		
 		$host = false;
 		$default = $this->config('StaticCache.domain');
 		$hostKeys = $this->config('StaticCache.keys');
 		//debug($this->options['domain']);
+		//debug($hostKeys);
 		if(is_array($hostKeys)) {
 		  if ($_SERVER['HTTP_HOST'] !== $default) {
 		  $hostFlipKeys = array_flip($hostKeys);
@@ -180,8 +184,8 @@ class StaticCacheBaseHelper extends AppHelper {
 		  //debug($hostKeys);
 		  //debug($host);
 		}
-    
-		$path = APP . 'webroot' . DS . 'cache' . $host . DS . $this->params['url']['ext'] .  $path . DS . 'index.' . $this->params['url']['ext'];
+		$ext = (!empty($this->request->params['ext'])) ? $this->request->params['ext'] : 'html';
+		$path = APP . 'webroot' . DS . 'cache' . $host . $path . DS . 'index.' . $ext;
 		
 		//die($path);
 		
