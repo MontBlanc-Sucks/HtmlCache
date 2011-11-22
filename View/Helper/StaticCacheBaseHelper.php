@@ -9,8 +9,9 @@
  * @license       MIT
  *
  */
-
-class StaticCacheBaseHelper extends Helper {
+App::uses('SessionHelper', 'View/Helper');
+App::uses('AppHelper', 'View/Helper');
+class StaticCacheBaseHelper extends AppHelper {
 
 /**
  * options property
@@ -69,23 +70,28 @@ class StaticCacheBaseHelper extends Helper {
  * @var string
  */
 	protected $_buildTimestamp;
+	
+	protected $View = null;
 
 /**
  * Constructor - finds and parses the ini file the plugin uses.
  *
  * @return void
  */
-	public function __construct($options = array()) {
-		if (!empty($options['iniFile'])) {
-			$iniFile = $options['iniFile'];
+	public function __construct(View $View, $settings = array()) {
+		// @todo use new cake ini goodness
+		if (!empty($settings['iniFile'])) {
+			$iniFile = $settings['iniFile'];
 		} else {
-			$iniFile = CONFIGS . 'static_cache.ini';
+			$iniFile = CakePlugin::path('StaticCache') . DS . 'Config' . 'static_cache.ini';
 		}
 		if (!file_exists($iniFile)) {
-			$iniFile = App::pluginPath('StaticCache') . 'config' . DS . 'config.ini';
+			$iniFile = App::pluginPath('StaticCache') . 'Config' . DS . 'config.ini';
 		}
 		$this->_iniFile = parse_ini_file($iniFile, true);
 		//debug($this->_iniFile);
+		$this->View = $View;
+		$this->Session = new SessionHelper($View);
 	}
 
 /**
@@ -123,6 +129,9 @@ class StaticCacheBaseHelper extends Helper {
  * @access public
  */
 	public function beforeRender() {
+		//App::uses('SessionHelper', 'View/Helper');
+		//$this->Session = new SessionHelper();
+		//$this->Session->
 		if($this->Session->read('Message')) {
 			$this->isFlash = true;
 		}
@@ -139,10 +148,8 @@ class StaticCacheBaseHelper extends Helper {
 			return;
 		}
 
-		$view =& ClassRegistry::getObject('view');
-
 		//handle 404s
-		if ($view->name == 'CakeError') {
+		if ($this->View->name == 'CakeError') {
 			$path = $this->params['url']['url'];
 		} else {
 			$path = $this->here;
@@ -179,7 +186,7 @@ class StaticCacheBaseHelper extends Helper {
 		//die($path);
 		
 		$file = new File($path, true);
-		$file->write($view->output);
+		$file->write($this->View->output);
 	}
 
 /**

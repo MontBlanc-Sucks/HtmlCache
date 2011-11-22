@@ -9,7 +9,7 @@
  * @license       MIT
  *
  */
-App::import('Helper', 'StaticCache.StaticCacheBase');
+App::uses('StaticCacheBaseHelper', 'StaticCache.View/Helper');
 
 /**
  * HtmlCacheHookHelper class
