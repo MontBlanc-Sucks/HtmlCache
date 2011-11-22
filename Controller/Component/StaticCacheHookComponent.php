@@ -17,7 +17,7 @@
  * @package       html_cache
  * @subpackage    html_cache.controllers.components
  */
-class HtmlCacheHookComponent extends Object {
+class StaticCacheHookComponent extends Object {
 
 /**
  * clearActions property
@@ -43,9 +43,10 @@ class HtmlCacheHookComponent extends Object {
  */
 	public function startup(&$controller) {
 		if($controller->data && in_array($controller->action, $this->clearActions)) {
-			App::import('core', 'Folder');
+			App::uses('Folder', 'Utility');
 			$Folder = new Folder();
-			$Folder->delete(WWW_ROOT . 'cache');
+			$Folder->delete(WWW_ROOT . 'cache' . DS . 'd');
+			$Folder->delete(WWW_ROOT . 'cache' . DS . 'm');
 		}
 	}
 }
