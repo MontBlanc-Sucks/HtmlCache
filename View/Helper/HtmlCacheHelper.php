@@ -18,7 +18,7 @@
  * @license       MIT
  *
  */
-App::uses('HtmlCacheBaseHelper', 'StaticCache.View/Helper');
+App::uses('HtmlCacheBaseHelper', 'HtmlCache.View/Helper');
 
 
 // @todo move this set of helpers into lib and make static cache helper use the lib make the
@@ -31,7 +31,7 @@ App::uses('HtmlCacheBaseHelper', 'StaticCache.View/Helper');
  * @package       HtmlCache
  * @subpackage    HtmlCache.View.Helper
  */
-class HtmlCacheHelper extends StaticCacheBaseHelper {
+class HtmlCacheHelper extends HtmlCacheBaseHelper {
 /**
  * construct method
  *

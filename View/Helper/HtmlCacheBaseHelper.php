@@ -59,61 +59,12 @@ class HtmlCacheBaseHelper extends AppHelper {
 	public $forceDisable = false;
 
 /**
- * parsed ini file values.
- *
- * @var array
- */
-	protected $_iniFile;
-
-/**
  * Contains the build timestamp from the file.
  *
  * @var string
  */
 	protected $_buildTimestamp;
 	
-	protected $View = null;
-
-/**
- * Constructor - finds and parses the ini file the plugin uses.
- *
- * @return void
- */
-	public function __construct(View $View, $settings = array()) {
-		// @todo use new cake ini goodness
-		if (!empty($settings['iniFile'])) {
-			$iniFile = $settings['iniFile'];
-		} else {
-			$iniFile = CakePlugin::path('HtmlCache') . DS . 'Config' . 'static_cache.ini';
-		}
-		if (!file_exists($iniFile)) {
-			$iniFile = App::pluginPath('HtmlCache') . 'Config' . DS . 'config.ini';
-		}
-		$this->_iniFile = parse_ini_file($iniFile, true);
-		//debug($this->_iniFile);
-		$this->View = $View;
-		$this->Session = new SessionHelper($View);
-	}
-
-/**
- * Modify the runtime configuration of the helper.
- * Used as a get/set for the ini file values.
- * 
- * @param string $name The dot separated config value to change ie. Css.searchPaths
- * @param mixed $value The value to set the config to.
- * @return mixed Either the value being read or null.  Null also is returned when reading things that don't exist.
- */
-	public function config($name, $value = null) {
-		if (strpos($name, '.') === false) {
-			return null;
-		}
-		list($section, $key) = explode('.', $name);
-		if ($value === null) {
-			return isset($this->_iniFile[$section][$key]) ? $this->_iniFile[$section][$key] : null;
-		}
-		$this->_iniFile[$section][$key] = $value;
-	}
-
 /**
  * Set options, merge with existing options.
  *
@@ -130,9 +81,6 @@ class HtmlCacheBaseHelper extends AppHelper {
  * @access public
  */
 	public function beforeRender() {
-		//App::uses('SessionHelper', 'View/Helper');
-		//$this->Session = new SessionHelper();
-		//$this->Session->
 		if($this->Session->read('Message')) {
 			$this->isFlash = true;
 		}
@@ -150,7 +98,7 @@ class HtmlCacheBaseHelper extends AppHelper {
 		}
 
 		//handle error pages not just 404
-		if ($this->View->name == 'CakeError') {
+		if ($this->_View->name == 'CakeError') {
 			$path = $this->request->params['url'];
 		} else {
 			$path = $this->here;
@@ -160,37 +108,24 @@ class HtmlCacheBaseHelper extends AppHelper {
 		if($path !== '') {
 			$path = DS . ltrim($path, DS);
 		}
-		
-		Configure::write('debug', 2);
-		
-		$host = false;
-		$default = $this->config('HtmlCache.domain');
-		$hostKeys = $this->config('HtmlCache.keys');
-		//debug($this->options['domain']);
-		//debug($hostKeys);
-		if(is_array($hostKeys)) {
-		  if ($_SERVER['HTTP_HOST'] !== $default) {
-		  $hostFlipKeys = array_flip($hostKeys);
-		    $host = $hostKeys[$hostFlipKeys[substr($_SERVER['HTTP_HOST'], 0, strpos($_SERVER['HTTP_HOST'], '.'))]];
-		  //debug($hostFlipKeys);
-		    //print "option 1";
-		  } else {
-		    //print "option defaault";
-		    $host = $hostKeys[0];
-		  }
-		
-		
-		  $host = DS . $host;
-		  //debug($hostKeys);
-		  //debug($host);
+
+		$host = '';
+		if($this->options['domain']) {
+			if (!empty($_SERVER['HTTP_HOST'])) {
+				$host = DS . $_SERVER['HTTP_HOST'];
+			} elseif ($this->options['host']) {
+				$host = DS . $this->options['host'];
+			}
 		}
-		$ext = (!empty($this->request->params['ext'])) ? $this->request->params['ext'] : 'html';
-		$path = APP . 'webroot' . DS . 'cache' . $host . $path . DS . 'index.' . $ext;
-		
-		//die($path);
+
+		$path = $this->options['www_root'] . 'cache' . $host . $path;
+		if ((empty($this->request->params['ext']) || $this->request->params['ext'] === 'html') && !preg_match('@.html?$@', $path)) {
+			$path .= DS . 'index.html';
+		}
+
 		
 		$file = new File($path, true);
-		$file->write($this->View->output);
+		$file->write($this->_View->output);
 	}
 
 /**
@@ -200,7 +135,7 @@ class HtmlCacheBaseHelper extends AppHelper {
  * @access protected
  */
 	protected function _isCachable() {
-		if (!$this->config('HtmlCache.testMode') || Configure::read('debug') > 0) {
+		if (empty($this->options['test_mode']) && Configure::read('debug') > 0) {
 			return false;
 		}
 		
@@ -208,15 +143,11 @@ class HtmlCacheBaseHelper extends AppHelper {
 			return false;
 		}
 
-		if(strpos($this->here, '/users') !== false || strpos($this->here, '/login') !== false || strpos($this->here, '/admin') !== false) {
-			return false;
-		}
-
 		if($this->isFlash) {
 			return false;
 		}
 
-		if(!empty($this->data)) {
+		if(!empty($this->request->data)) {
 			return false;
 		}
 
