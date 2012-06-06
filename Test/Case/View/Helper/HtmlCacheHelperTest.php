@@ -1,10 +1,10 @@
 <?php
-App::uses('StaticCacheBaseHelper', 'StaticCache.View/Helper');
-App::uses('StaticCacheHelper', 'StaticCache.View/Helper');
+App::uses('HtmlCacheBaseHelper', 'StaticCache.View/Helper');
+App::uses('HtmlCacheHelper', 'StaticCache.View/Helper');
 App::uses('View', 'View');
 App::uses('Folder', 'Utility');
 
-class StaticCacheHelperTest extends CakeTestCase {
+class HtmlCacheHelperTest extends CakeTestCase {
   public $View = null;
   public $www_root = null;
 
@@ -12,8 +12,8 @@ class StaticCacheHelperTest extends CakeTestCase {
     $this->www_root = ROOT . DS . 'app' . DS . 'plugins' . DS . 'html_cache' . DS . 'tests' . DS . 'test_app' . DS . 'webroot' . DS;
     $controller = null;
     $this->View = new View($controller);
-    $this->View->loaded['StaticCache'] = new StaticCacheHelper(array('test_mode' => true, 'www_root' => $this->www_root));
-    $this->View->loaded['StaticCache']->here = '/posts';
+    $this->View->loaded['HtmlCache'] = new StaticCacheHelper(array('test_mode' => true, 'www_root' => $this->www_root));
+    $this->View->loaded['HtmlCache']->here = '/posts';
   }
 
   public function endCase() {
@@ -31,10 +31,10 @@ class StaticCacheHelperTest extends CakeTestCase {
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <html lang="en">
 <head>
-    <title>StaticCacheHelper Test Title</title>
+    <title>HtmlCacheHelper Test Title</title>
 </head>
 <body>
-    StaticCacheHelper Test Body
+    HtmlCacheHelper Test Body
 </body>
 </html>
 END;

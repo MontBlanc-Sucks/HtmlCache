@@ -17,7 +17,7 @@
  * @package       html_cache
  * @subpackage    html_cache.controllers.components
  */
-class StaticCacheHookComponent extends Object {
+class HtmlCacheHookComponent extends Object {
 
 /**
  * clearActions property

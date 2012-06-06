@@ -12,7 +12,7 @@
 App::uses('SessionHelper', 'View/Helper');
 App::uses('AppHelper', 'View/Helper');
 App::uses('File', 'Utility');
-class StaticCacheBaseHelper extends AppHelper {
+class HtmlCacheBaseHelper extends AppHelper {
 
 /**
  * options property
@@ -84,10 +84,10 @@ class StaticCacheBaseHelper extends AppHelper {
 		if (!empty($settings['iniFile'])) {
 			$iniFile = $settings['iniFile'];
 		} else {
-			$iniFile = CakePlugin::path('StaticCache') . DS . 'Config' . 'static_cache.ini';
+			$iniFile = CakePlugin::path('HtmlCache') . DS . 'Config' . 'static_cache.ini';
 		}
 		if (!file_exists($iniFile)) {
-			$iniFile = App::pluginPath('StaticCache') . 'Config' . DS . 'config.ini';
+			$iniFile = App::pluginPath('HtmlCache') . 'Config' . DS . 'config.ini';
 		}
 		$this->_iniFile = parse_ini_file($iniFile, true);
 		//debug($this->_iniFile);
@@ -164,8 +164,8 @@ class StaticCacheBaseHelper extends AppHelper {
 		Configure::write('debug', 2);
 		
 		$host = false;
-		$default = $this->config('StaticCache.domain');
-		$hostKeys = $this->config('StaticCache.keys');
+		$default = $this->config('HtmlCache.domain');
+		$hostKeys = $this->config('HtmlCache.keys');
 		//debug($this->options['domain']);
 		//debug($hostKeys);
 		if(is_array($hostKeys)) {
@@ -200,7 +200,7 @@ class StaticCacheBaseHelper extends AppHelper {
  * @access protected
  */
 	protected function _isCachable() {
-		if (!$this->config('StaticCache.testMode') || Configure::read('debug') > 0) {
+		if (!$this->config('HtmlCache.testMode') || Configure::read('debug') > 0) {
 			return false;
 		}
 		

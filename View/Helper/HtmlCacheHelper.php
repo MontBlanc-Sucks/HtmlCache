@@ -1,6 +1,6 @@
 <?php
 /*
- * StaticCache Plugin for cake 2.0 
+ * HtmlCache Plugin for cake 2.0 
  * Copyright (c) 2011 Sam Sherlock
  * http://samsherlock.com
  * http://github.com/samsherlock/static_cache
@@ -18,20 +18,20 @@
  * @license       MIT
  *
  */
-App::uses('StaticCacheBaseHelper', 'StaticCache.View/Helper');
+App::uses('HtmlCacheBaseHelper', 'StaticCache.View/Helper');
 
 
 // @todo move this set of helpers into lib and make static cache helper use the lib make the
 
 
 /**
- * StaticCacheHelper class
+ * HtmlCacheHelper class
  *
- * @uses          StaticCacheBaseHelper
- * @package       StaticCache
- * @subpackage    StaticCache.View.Helper
+ * @uses          HtmlCacheBaseHelper
+ * @package       HtmlCache
+ * @subpackage    HtmlCache.View.Helper
  */
-class StaticCacheHelper extends StaticCacheBaseHelper {
+class HtmlCacheHelper extends StaticCacheBaseHelper {
 /**
  * construct method
  *
