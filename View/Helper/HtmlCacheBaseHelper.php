@@ -127,12 +127,11 @@ class HtmlCacheBaseHelper extends AppHelper {
 			}
 		}
 
-		$path = $this->options['www_root'] . $this->options['cache_dir'] . $host . $path;
+		$path = $this->options['www_root'] . DS . $this->options['cache_dir'] . $host . $path;
 		if ((empty($this->request->params['ext']) || $this->request->params['ext'] === 'html') && !preg_match('@.html?$@', $path)) {
 			$path .= DS . 'index.html';
 		}
 
-		
 		$file = new File($path, true);
 		$file->write($this->_View->output);
 	}
