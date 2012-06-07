@@ -23,7 +23,9 @@ class HtmlCacheBaseHelper extends AppHelper {
 	public $options = array(
 		'test_mode' => false,
 		'host' => null,
-		'domain' => false
+		'domain' => false,
+		'www_root' => null, // override in constructor
+		'cache_dir' => 'cache',
 	);
 
 /**
@@ -65,6 +67,13 @@ class HtmlCacheBaseHelper extends AppHelper {
  */
 	protected $_buildTimestamp;
 	
+	public function __construct(View $View) {
+		$defaults = array(
+			'www_root' => APP . WEBROOT_DIR,
+		);
+		$this->options($defaults);
+		parent::__construct($View);
+	}
 /**
  * Set options, merge with existing options.
  *
@@ -118,7 +127,7 @@ class HtmlCacheBaseHelper extends AppHelper {
 			}
 		}
 
-		$path = $this->options['www_root'] . 'cache' . $host . $path;
+		$path = $this->options['www_root'] . $this->options['cache_dir'] . $host . $path;
 		if ((empty($this->request->params['ext']) || $this->request->params['ext'] === 'html') && !preg_match('@.html?$@', $path)) {
 			$path .= DS . 'index.html';
 		}

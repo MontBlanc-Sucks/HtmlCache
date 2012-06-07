@@ -25,6 +25,20 @@ class HtmlCacheHelperTest extends CakeTestCase {
 		$this->assertTrue(is_a($this->View, 'View'));
 	}
 
+	public function testOption() {
+		$options = array('test_mode' => true, 'www_root' => $this->www_root);
+		$this->View->HtmlCache->options($options);
+		$results = $this->View->HtmlCache->options;
+		$expected = array(
+			'host' => null,
+			'domain' => false,
+			'cache_dir' => 'cache',
+			'test_mode' => true,
+			'www_root' => $this->www_root,
+		);
+		$this->assertEquals($expected, $results);
+	}
+
 	public function testWriteCache() {
 		$expected = <<<END
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
