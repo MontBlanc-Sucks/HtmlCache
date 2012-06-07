@@ -26,6 +26,7 @@ class HtmlCacheBaseHelper extends AppHelper {
 		'domain' => false,
 		'www_root' => null, // override in constructor
 		'cache_dir' => 'cache',
+		'file_path' => null, // use if you need custom path
 	);
 
 /**
@@ -127,12 +128,15 @@ class HtmlCacheBaseHelper extends AppHelper {
 			}
 		}
 
-		$path = $this->options['www_root'] . DS . $this->options['cache_dir'] . $host . $path;
-		if ((empty($this->request->params['ext']) || $this->request->params['ext'] === 'html') && !preg_match('@.html?$@', $path)) {
-			$path .= DS . 'index.html';
+		if (empty($this->options['file_path'])) {
+			$path = $this->options['www_root'] . DS . $this->options['cache_dir'] . $host . $path;
+			if ((empty($this->request->params['ext']) || $this->request->params['ext'] === 'html') && !preg_match('@.html?$@', $path)) {
+				$path .= DS . 'index.html';
+			}
+			$this->options['file_path'] = $path;
 		}
 
-		$file = new File($path, true);
+		$file = new File($this->options['file_path'], true);
 		$file->write($this->_View->output);
 	}
 
