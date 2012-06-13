@@ -45,6 +45,7 @@ END;
 			'host' => null,
 			'domain' => false,
 			'cache_dir' => 'cache',
+			'filename' => 'index.html',
 			'test_mode' => true,
 			'www_root' => $this->www_root,
 			'file_path' => null,
@@ -73,4 +74,17 @@ END;
 		$Folder = new Folder();
 		$Folder->delete($this->www_root . 'test');
 	}
+
+	public function testFileName() {
+		$filename = 'index.php';
+		$this->View->HtmlCache->options(compact('filename'));
+		$this->View->output = $this->_expected;
+		$this->View->HtmlCache->afterLayout();
+
+		$path = $this->www_root . 'cache' . DS . 'posts' . DS . 'index.php';
+		$this->assertTrue(file_exists($path));
+		$cached = file_get_contents($path);
+		$this->assertEquals($this->_expected, $cached);
+	}
+
 }
