@@ -76,6 +76,7 @@ class HtmlCacheBaseHelper extends AppHelper {
 		$this->options($defaults);
 		parent::__construct($View);
 	}
+
 /**
  * Set options, merge with existing options.
  *
@@ -83,6 +84,26 @@ class HtmlCacheBaseHelper extends AppHelper {
  */
 	public function options($options) {
 		$this->options = Set::merge($this->options, $options);
+	}
+
+/**
+ * Delete file
+ *
+ * @var (optional) mixed file path string
+ * @var (optional) boolean cache directory if true
+ * @return mixed deleted file path
+ */
+	public function deleteCache($path = false, $isCacheDir = false) {
+		$dir = $this->options['www_root'];
+		if (empty($isCacheDir)) {
+			$dir .= $this->options['cache_dir'];
+		} elseif (empty($path)) {
+			return false;
+		}
+		$path = $dir . (!empty($path) ? DS . ltrim($path, DS) : '');
+		$File = new File($path);
+		$File->delete();
+		return $path;
 	}
 
 /**

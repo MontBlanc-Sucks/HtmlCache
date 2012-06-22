@@ -87,4 +87,22 @@ END;
 		$this->assertEquals($this->_expected, $cached);
 	}
 
+	public function testDeleteCache() {
+		$expected = $this->www_root . 'cache';
+		$File = new File($expected, true);
+		$File->create();
+		$this->assertTrue(file_exists($expected));
+		$result = $this->View->HtmlCache->deleteCache();
+		$this->assertFalse(file_exists($expected));
+		$this->assertSame($expected, $result);
+
+		$expected = $this->www_root . 'cache/tests/index.html';
+		$File = new File($expected, true);
+		$File->create();
+		$this->assertTrue(file_exists($expected));
+		$result = $this->View->HtmlCache->deleteCache('tests/index.html');
+		$this->assertFalse(file_exists($expected));
+		$this->assertSame($expected, $result);
+	}
+
 }
