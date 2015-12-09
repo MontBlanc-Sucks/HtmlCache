@@ -112,7 +112,7 @@ class HtmlCacheBaseHelper extends AppHelper {
  * @return void
  * @access public
  */
-	public function beforeRender() {
+	public function beforeRender($viewFile) {
 		if($this->Session->read('Message')) {
 			$this->isFlash = true;
 		}
@@ -124,7 +124,7 @@ class HtmlCacheBaseHelper extends AppHelper {
  * @return void
  * @access public
  */
-	public function afterLayout() {
+	public function afterLayout($layoutFile) {
 		if(!$this->_isCachable()) {
 			return;
 		}
